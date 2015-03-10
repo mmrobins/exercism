@@ -23,32 +23,49 @@ defmodule ListOps do
 
   @spec reverse(list) :: list
   def reverse(l) do
-
+    reverse_rec(l, [])
+  end
+  defp reverse_rec([], acc), do: acc
+  defp reverse_rec([head | tail], acc) do
+    reverse_rec(tail, [ head | acc ])
   end
 
   @spec map(list, (any -> any)) :: list
-  def map(l, f) do
-
+  def map([], f), do: []
+  def map([head | tail], f) do
+    [ f.(head) | map(tail, f) ]
   end
 
   @spec filter(list, (any -> as_boolean(term))) :: list
-  def filter(l, f) do
-
+  def filter([], f), do: []
+  def filter([head | tail], f) do
+    if f.(head) do
+      [ head | filter(tail, f) ]
+    else
+      filter(tail, f)
+    end
   end
 
   @type acc :: any
   @spec reduce(list, acc, ((any, acc) -> acc)) :: acc
-  def reduce(l, acc, f) do
-
+  def reduce([], acc, f), do: acc
+  def reduce([head | tail], acc, f) do
+    reduce(tail, f.(head, acc), f)
   end
 
   @spec append(list, list) :: list
-  def append(a, b) do
-
+  def append([], b), do: b
+  def append(a, []), do: a
+  def append([head | tail], b) do
+    [ head | append(tail, b) ]
   end
 
   @spec concat([[any]]) :: [any]
-  def concat(ll) do
+  def concat(l) do
+    concat_rec(l, [])
 
   end
+  def concat_rec([], acc), do: acc
+  defp concat([head | tail], acc), do: concat_rec(head, tail, acc)
+  defp concat([], tail, acc), do: concat_rec(tail, acc)
 end
